@@ -19,7 +19,7 @@ builds:
     main: ./main.go
     binary: apv
     ldflags:
-      - -s -w -X main.Version={{.Version}}
+      - -s -w -X github.com/rchaganti/agent-plugin-validator/cmd.Version={{.Version}}
 
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
@@ -32,6 +32,9 @@ checksum:
 
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
+
+release:
+  mode: replace
 
 changelog:
   sort: asc

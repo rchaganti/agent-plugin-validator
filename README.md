@@ -20,6 +20,7 @@
   - Embedded v1.0.0 default schema fallback (`plugin.schema.json`).
   - `apv schema update [url]` to fetch and cache updated schemas locally (`~/.apv/schemas/`).
   - `--schema <path|url>` for one-off custom schema validation.
+- 🚀 **Shell Autocompletion**: Built-in tab completion for Bash, Zsh, Fish, and PowerShell (`apv completion <shell>`) with `.json` file completion for `validate` and `--schema`.
 - ⚠️ **Spec-Compliant Warning Handling**:
   - Unrecognized top-level fields are classified as **Warnings** (`⚠`) and ignored per Spec §5.2 without failing validation.
 
