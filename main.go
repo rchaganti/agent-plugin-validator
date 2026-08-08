@@ -12,7 +12,7 @@ import (
 	"github.com/ravik/agent-plugin-validator/validator"
 )
 
-var Version = "1.0.0"
+var Version = "1.0.1"
 
 // Terminal color codes
 const (
