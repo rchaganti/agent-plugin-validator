@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/dlclark/regexp2"
-	"github.com/ravik/agent-plugin-validator/schema"
+	"github.com/rchaganti/agent-plugin-validator/schema"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 	"github.com/santhosh-tekuri/jsonschema/v6/kind"
 )

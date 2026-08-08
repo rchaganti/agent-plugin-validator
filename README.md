@@ -1,8 +1,8 @@
 # apv — Agent Plugin Validator
 
-[![Continuous Integration](https://github.com/ravik/agent-plugin-validator/actions/workflows/ci.yml/badge.svg)](https://github.com/ravik/agent-plugin-validator/actions/workflows/ci.yml)
-[![Release](https://github.com/ravik/agent-plugin-validator/actions/workflows/release.yml/badge.svg)](https://github.com/ravik/agent-plugin-validator/actions/workflows/release.yml)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/ravik/agent-plugin-validator)](https://golang.org)
+[![Continuous Integration](https://github.com/rchaganti/agent-plugin-validator/actions/workflows/ci.yml/badge.svg)](https://github.com/rchaganti/agent-plugin-validator/actions/workflows/ci.yml)
+[![Release](https://github.com/rchaganti/agent-plugin-validator/actions/workflows/release.yml/badge.svg)](https://github.com/rchaganti/agent-plugin-validator/actions/workflows/release.yml)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/rchaganti/agent-plugin-validator)](https://golang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 `apv` (**A**gent **P**lugin **V**alidator) is a lightweight, high-performance, **schema-driven** Go CLI tool for validating Agent Plugin manifests (`plugin.json`) against the open [Agent Plugins v1.0.0 specification](https://agent-plugins.org/specification).
@@ -29,11 +29,11 @@
 
 ### Via `go install`
 ```bash
-go install github.com/ravik/agent-plugin-validator@latest
+go install github.com/rchaganti/agent-plugin-validator@latest
 ```
 
 ### Download Pre-built Binaries
-Download static binaries for Linux, macOS, and Windows (amd64/arm64) from the [Releases Page](https://github.com/ravik/agent-plugin-validator/releases).
+Download static binaries for Linux, macOS, and Windows (amd64/arm64) from the [Releases Page](https://github.com/rchaganti/agent-plugin-validator/releases).
 
 ---
 

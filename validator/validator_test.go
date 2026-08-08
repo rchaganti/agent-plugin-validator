@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ravik/agent-plugin-validator/schema"
+	"github.com/rchaganti/agent-plugin-validator/schema"
 )
 
 func TestValidateManifests(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/ravik/agent-plugin-validator
+module github.com/rchaganti/agent-plugin-validator
 
 go 1.22
 

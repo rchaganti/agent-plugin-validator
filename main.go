@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ravik/agent-plugin-validator/schema"
-	"github.com/ravik/agent-plugin-validator/validator"
+	"github.com/rchaganti/agent-plugin-validator/schema"
+	"github.com/rchaganti/agent-plugin-validator/validator"
 )
 
 var Version = "1.0.1"
