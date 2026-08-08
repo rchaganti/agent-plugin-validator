@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "full-plugin",
+  "version": "1.0.0",
+  "description": "Full feature sample plugin",
+  "author": {
+    "name": "Dev Name",
+    "email": "dev@example.com",
+    "url": "https://example.com"
+  },
+  "homepage": "https://example.com/docs",
+  "repository": "https://github.com/example/full-plugin",
+  "license": "MIT",
+  "keywords": ["ai", "agent", "tool"],
+  "extensions": {
+    "com.example.client": {
+      "setting": true
+    }
+  }
+}
