@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/rchaganti/agent-plugin-validator/schema"
 	"github.com/rchaganti/agent-plugin-validator/validator"
@@ -13,10 +14,12 @@ import (
 )
 
 var (
-	schemaOverride string
-	schemaTypeFlag string
-	outputFormat   string
-	quietMode      bool
+	schemaOverride         string
+	schemaManifestOverride string
+	schemaMCPOverride      string
+	schemaTypeFlag         string
+	outputFormat           string
+	quietMode              bool
 )
 
 var validateCmd = &cobra.Command{
@@ -75,13 +78,46 @@ Pass '-' as the file argument to read from standard input.`,
 	},
 }
 
+func getOverrideFor(schemaType string) string {
+	// 1. Check dedicated flags
+	if schemaType == schema.SchemaTypeManifest && schemaManifestOverride != "" {
+		return schemaManifestOverride
+	}
+	if schemaType == schema.SchemaTypeMCP && schemaMCPOverride != "" {
+		return schemaMCPOverride
+	}
+
+	// 2. Check key=value format in --schema (e.g., --schema manifest=./p.json,mcp=./m.json or --schema manifest=./p.json)
+	if strings.Contains(schemaOverride, "=") {
+		parts := strings.Split(schemaOverride, ",")
+		for _, part := range parts {
+			kv := strings.SplitN(strings.TrimSpace(part), "=", 2)
+			if len(kv) == 2 {
+				k := strings.ToLower(strings.TrimSpace(kv[0]))
+				v := strings.TrimSpace(kv[1])
+				if k == schemaType {
+					return v
+				}
+			}
+		}
+	}
+
+	// 3. Fallback to generic --schema override if not key=value
+	if schemaOverride != "" && !strings.Contains(schemaOverride, "=") {
+		return schemaOverride
+	}
+
+	return ""
+}
+
 func runSingleValidation(manifestData []byte, path string, mgr *schema.Manager) {
 	targetType := schemaTypeFlag
 	if targetType == "" || targetType == "auto" {
 		targetType = schema.DetectType(manifestData, path)
 	}
 
-	schemaInfo, err := mgr.Resolve(targetType, schemaOverride)
+	override := getOverrideFor(targetType)
+	schemaInfo, err := mgr.Resolve(targetType, override)
 	if err != nil {
 		if !quietMode {
 			fmt.Fprintf(os.Stderr, "Error resolving schema: %v\n", err)
@@ -172,7 +208,8 @@ func runDirectoryValidation(dirPath string, mgr *schema.Manager) {
 			targetType = schema.DetectType(data, filePath)
 		}
 
-		schemaInfo, err := mgr.Resolve(targetType, schemaOverride)
+		override := getOverrideFor(targetType)
+		schemaInfo, err := mgr.Resolve(targetType, override)
 		if err != nil {
 			if !quietMode {
 				fmt.Fprintf(os.Stderr, "Error resolving schema: %v\n", err)
@@ -231,13 +268,17 @@ func fileExists(path string) bool {
 }
 
 func init() {
-	validateCmd.Flags().StringVarP(&schemaOverride, "schema", "s", "", "Custom schema override (path or URL)")
+	validateCmd.Flags().StringVarP(&schemaOverride, "schema", "s", "", "Custom schema override (path, URL, or key=value, e.g. manifest=p.json,mcp=m.json)")
+	validateCmd.Flags().StringVar(&schemaManifestOverride, "schema-manifest", "", "Custom Manifest schema override (path or URL)")
+	validateCmd.Flags().StringVar(&schemaMCPOverride, "schema-mcp", "", "Custom MCP schema override (path or URL)")
 	validateCmd.Flags().StringVarP(&schemaTypeFlag, "type", "t", "auto", "Schema type: auto, manifest, mcp")
 	validateCmd.Flags().StringVarP(&outputFormat, "format", "f", "text", "Output format (text or json)")
 	validateCmd.Flags().BoolVarP(&quietMode, "quiet", "q", false, "Quiet mode (suppress output, exit code only)")
 
 	// Shell autocompletion setup
 	_ = validateCmd.MarkFlagFilename("schema", "json")
+	_ = validateCmd.MarkFlagFilename("schema-manifest", "json")
+	_ = validateCmd.MarkFlagFilename("schema-mcp", "json")
 	_ = validateCmd.RegisterFlagCompletionFunc("type", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"auto", "manifest", "mcp"}, cobra.ShellCompDirectiveNoFileComp
 	})

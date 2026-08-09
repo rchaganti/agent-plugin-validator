@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Version = "1.3.1"
+var Version = "1.4.0"
 
 var (
 	colorMode string

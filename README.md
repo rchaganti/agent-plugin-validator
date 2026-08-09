@@ -18,8 +18,8 @@
   - TTY auto-detection and standard `NO_COLOR` environment variable support.
 - 📦 **Embedded & Cached Schema Lifecycle**:
   - Embedded canonical v1.0.0 schemas (`plugin.schema.json` and `mcp.schema.json`).
-  - `apv schema update [manifest|mcp] [url]` to fetch and cache updated schemas locally (`~/.apv/schemas/`).
-  - `--schema <path|url>` for one-off custom schema validation.
+  - `apv schema update [manifest|mcp|all] [url]` to fetch and cache updated schemas locally (`~/.apv/schemas/`).
+  - Flexible `--schema` overrides: `--schema <path|url>`, `--schema-manifest <path>`, `--schema-mcp <path>`, or `--schema manifest=p.json,mcp=m.json`.
 - 🚀 **Shell Autocompletion**: Built-in tab completion for Bash, Zsh, Fish, and PowerShell (`apv completion <shell>`) with `.json` file completion for `validate` and `--schema`.
 - ⚠️ **Spec-Compliant Warning Handling**:
   - Unrecognized top-level fields in `plugin.json` are classified as **Warnings** (`⚠`) and ignored per Spec §5.2 without failing validation.
