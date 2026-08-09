@@ -40,15 +40,22 @@ Download static binaries for Linux, macOS, and Windows (amd64/arm64) from the [R
 
 ## Quick Start
 
-### 1. Validate a Manifest File
+### 1. Validate a Single File or Directory Folder
 ```bash
+# Validate single file
 apv validate plugin.json
+
+# Validate entire plugin folder (auto-discovers plugin.json and mcp.json)
+apv validate ./my-plugin-folder
 ```
 
 **Output**:
 ```text
 ✓ Using schema: Agent Plugins Manifest (embedded default)
-✓ plugin.json is VALID
+✓ ./my-plugin-folder/plugin.json is VALID
+
+✓ Using schema: Agent Plugins MCP Configuration (embedded default)
+✓ ./my-plugin-folder/mcp.json is VALID
 ```
 
 ### 2. Machine-Readable Output for AI Agents & CI/CD

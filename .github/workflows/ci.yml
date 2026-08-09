@@ -37,6 +37,8 @@ jobs:
           ./apv validate testdata/valid_minimal.json
           ./apv validate testdata/valid_full.json
           ./apv validate testdata/valid_mcp.json
-          ./apv validate --format json testdata/valid_mcp.json
+          ./apv validate testdata/plugin_dir_valid
+          ./apv validate testdata/plugin_dir_empty
+          ./apv validate --format json testdata/plugin_dir_valid
           ! ./apv validate -q testdata/invalid_name_uppercase.json
           ! ./apv validate -q testdata/invalid_mcp.json
