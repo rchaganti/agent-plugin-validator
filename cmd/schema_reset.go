@@ -11,7 +11,7 @@ import (
 var resetType string
 
 var schemaResetCmd = &cobra.Command{
-	Use:   "reset [manifest|mcp]",
+	Use:   "reset [manifest|mcp|all]",
 	Short: "Revert to embedded default schema(s)",
 	Long:  `Delete locally cached schema file(s), reverting apv to use embedded default schemas.`,
 	Args:  cobra.MaximumNArgs(1),
@@ -19,6 +19,9 @@ var schemaResetCmd = &cobra.Command{
 		targetType := resetType
 		if len(args) > 0 {
 			targetType = args[0]
+		}
+		if targetType == "all" {
+			targetType = ""
 		}
 
 		mgr, err := schema.NewManager()
@@ -41,9 +44,9 @@ var schemaResetCmd = &cobra.Command{
 }
 
 func init() {
-	schemaResetCmd.Flags().StringVarP(&resetType, "type", "t", "", "Schema type (manifest, mcp, or empty for all)")
+	schemaResetCmd.Flags().StringVarP(&resetType, "type", "t", "all", "Schema type (all, manifest, or mcp)")
 	_ = schemaResetCmd.RegisterFlagCompletionFunc("type", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{"manifest", "mcp"}, cobra.ShellCompDirectiveNoFileComp
+		return []string{"all", "manifest", "mcp"}, cobra.ShellCompDirectiveNoFileComp
 	})
 	schemaCmd.AddCommand(schemaResetCmd)
 }

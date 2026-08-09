@@ -93,9 +93,9 @@ apv validate -q plugin.json || exit 1
 
 | Command | Description |
 |---|---|
-| `apv schema show` | Displays active schema title, `$id`, source, and path |
-| `apv schema update [url]` | Downloads and caches the schema from `https://agent-plugins.org/...` or custom URL |
-| `apv schema reset` | Deletes the cached schema and reverts to the embedded default |
+| `apv schema show [manifest|mcp|all]` | Displays active schema title, `$id`, source, and path for manifest, mcp, or all schemas |
+| `apv schema update [manifest|mcp|all] [url]` | Downloads and caches updated schema(s) from `https://agent-plugins.org/...` or custom URL |
+| `apv schema reset [manifest|mcp|all]` | Deletes cached schema file(s) and reverts to embedded defaults |
 
 ---
 
