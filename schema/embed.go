@@ -6,21 +6,31 @@ import (
 )
 
 //go:embed plugin.schema.json
-var embeddedSchema []byte
+var embeddedPluginSchema []byte
 
-// EmbeddedSchema returns the raw byte content of the embedded default schema.
-func EmbeddedSchema() []byte {
-	return embeddedSchema
+//go:embed mcp.schema.json
+var embeddedMCPSchema []byte
+
+// EmbeddedSchema returns the raw byte content for the given schema type ("manifest" or "mcp").
+func EmbeddedSchema(schemaType string) []byte {
+	if schemaType == SchemaTypeMCP {
+		return embeddedMCPSchema
+	}
+	return embeddedPluginSchema
 }
 
 // EmbeddedSchemaInfo parses basic metadata ($id, title) from the embedded schema.
-func EmbeddedSchemaInfo() (id string, title string) {
+func EmbeddedSchemaInfo(schemaType string) (id string, title string) {
+	data := EmbeddedSchema(schemaType)
 	var meta struct {
 		ID    string `json:"$id"`
 		Title string `json:"title"`
 	}
-	if err := json.Unmarshal(embeddedSchema, &meta); err == nil {
+	if err := json.Unmarshal(data, &meta); err == nil {
 		return meta.ID, meta.Title
 	}
-	return "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", "Agent Plugins Manifest"
+	if schemaType == SchemaTypeMCP {
+		return CanonicalMCPSchemaURL, "Agent Plugins MCP Configuration"
+	}
+	return CanonicalPluginSchemaURL, "Agent Plugins Manifest"
 }

@@ -14,45 +14,69 @@ func TestValidateManifests(t *testing.T) {
 		t.Fatalf("failed to create schema manager: %v", err)
 	}
 
-	schemaInfo, err := mgr.Resolve("")
+	manifestSchema, err := mgr.Resolve(schema.SchemaTypeManifest, "")
 	if err != nil {
-		t.Fatalf("failed to resolve embedded schema: %v", err)
+		t.Fatalf("failed to resolve embedded manifest schema: %v", err)
+	}
+
+	mcpSchema, err := mgr.Resolve(schema.SchemaTypeMCP, "")
+	if err != nil {
+		t.Fatalf("failed to resolve embedded mcp schema: %v", err)
 	}
 
 	tests := []struct {
-		name           string
-		fixtureFile    string
-		expectValid    bool
-		expectedErrAt  string
+		name            string
+		fixtureFile     string
+		schemaInfo      *schema.SchemaInfo
+		expectValid     bool
+		expectedErrAt   string
 		expectWarnCount int
 	}{
 		{
 			name:        "Valid Minimal Manifest",
 			fixtureFile: "valid_minimal.json",
+			schemaInfo:  manifestSchema,
 			expectValid: true,
 		},
 		{
 			name:        "Valid Full Manifest",
 			fixtureFile: "valid_full.json",
+			schemaInfo:  manifestSchema,
 			expectValid: true,
 		},
 		{
 			name:          "Missing Name Field",
 			fixtureFile:   "missing_name.json",
+			schemaInfo:    manifestSchema,
 			expectValid:   false,
 			expectedErrAt: "/",
 		},
 		{
 			name:          "Uppercase Name Violation",
 			fixtureFile:   "invalid_name_uppercase.json",
+			schemaInfo:    manifestSchema,
 			expectValid:   false,
 			expectedErrAt: "/name",
 		},
 		{
 			name:            "Unknown Top Level Field (Warning per Spec §5.2)",
 			fixtureFile:     "unknown_fields.json",
+			schemaInfo:      manifestSchema,
 			expectValid:     true,
 			expectWarnCount: 1,
+		},
+		{
+			name:        "Valid MCP Configuration",
+			fixtureFile: "valid_mcp.json",
+			schemaInfo:  mcpSchema,
+			expectValid: true,
+		},
+		{
+			name:          "Invalid MCP Configuration (stdio missing command)",
+			fixtureFile:   "invalid_mcp.json",
+			schemaInfo:    mcpSchema,
+			expectValid:   false,
+			expectedErrAt: "/mcpServers/bad-tool",
 		},
 	}
 
@@ -64,7 +88,7 @@ func TestValidateManifests(t *testing.T) {
 				t.Fatalf("failed to read fixture %s: %v", path, err)
 			}
 
-			result, err := Validate(data, schemaInfo)
+			result, err := Validate(data, tt.schemaInfo)
 			if err != nil {
 				t.Fatalf("validation error: %v", err)
 			}

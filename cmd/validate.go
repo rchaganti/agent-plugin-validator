@@ -13,15 +13,17 @@ import (
 
 var (
 	schemaOverride string
+	schemaTypeFlag string
 	outputFormat   string
 	quietMode      bool
 )
 
 var validateCmd = &cobra.Command{
 	Use:   "validate <file>",
-	Short: "Validate a plugin.json manifest against JSON schema",
-	Long: `Validate an Agent Plugin manifest (plugin.json) against the active Agent Plugins JSON schema.
-Pass '-' as the file argument to read the manifest from standard input.`,
+	Short: "Validate a plugin.json or mcp.json file against JSON schema",
+	Long: `Validate an Agent Plugin manifest (plugin.json) or MCP configuration (mcp.json) 
+against the canonical Agent Plugins v1.0.0 JSON schema.
+Pass '-' as the file argument to read from standard input.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		manifestPath := args[0]
@@ -57,7 +59,12 @@ Pass '-' as the file argument to read the manifest from standard input.`,
 			os.Exit(2)
 		}
 
-		schemaInfo, err := mgr.Resolve(schemaOverride)
+		targetType := schemaTypeFlag
+		if targetType == "" || targetType == "auto" {
+			targetType = schema.DetectType(manifestData, manifestPath)
+		}
+
+		schemaInfo, err := mgr.Resolve(targetType, schemaOverride)
 		if err != nil {
 			if !quietMode {
 				fmt.Fprintf(os.Stderr, "Error resolving schema: %v\n", err)
@@ -100,11 +107,15 @@ Pass '-' as the file argument to read the manifest from standard input.`,
 
 func init() {
 	validateCmd.Flags().StringVarP(&schemaOverride, "schema", "s", "", "Custom schema override (path or URL)")
+	validateCmd.Flags().StringVarP(&schemaTypeFlag, "type", "t", "auto", "Schema type: auto, manifest, mcp")
 	validateCmd.Flags().StringVarP(&outputFormat, "format", "f", "text", "Output format (text or json)")
 	validateCmd.Flags().BoolVarP(&quietMode, "quiet", "q", false, "Quiet mode (suppress output, exit code only)")
 
 	// Shell autocompletion setup
 	_ = validateCmd.MarkFlagFilename("schema", "json")
+	_ = validateCmd.RegisterFlagCompletionFunc("type", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"auto", "manifest", "mcp"}, cobra.ShellCompDirectiveNoFileComp
+	})
 	_ = validateCmd.RegisterFlagCompletionFunc("format", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"text", "json"}, cobra.ShellCompDirectiveNoFileComp
 	})

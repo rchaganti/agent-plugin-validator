@@ -5,24 +5,24 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/rchaganti/agent-plugin-validator)](https://golang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-`apv` (**A**gent **P**lugin **V**alidator) is a lightweight, high-performance, **schema-driven** Go CLI tool for validating Agent Plugin manifests (`plugin.json`) against the open [Agent Plugins v1.0.0 specification](https://agent-plugins.org/specification).
+`apv` (**A**gent **P**lugin **V**alidator) is a lightweight, high-performance, **schema-driven** Go CLI tool for validating Agent Plugin manifests (`plugin.json`) and MCP configurations (`mcp.json`) against the open [Agent Plugins v1.0.0 specification](https://agent-plugins.org/specification).
 
 ---
 
 ## Key Features
 
-- 🎯 **100% Schema-Driven Validation**: Zero hardcoded field assumptions in validator code. Utilizes JSON Schema Draft 2020-12 with full ECMAScript lookaround regex support (`(?!...`).
+- 🎯 **100% Schema-Driven Validation**: Validates both **Plugin Manifests (`plugin.json`)** and **MCP Configurations (`mcp.json`)**. Automatically detects schema type via `$schema` URL or filename (`--type auto|manifest|mcp`).
 - ⚡ **Agent & CI/CD Ready**: 
   - `--format json` output for programmatic consumption by AI agents and pipeline steps.
   - `--quiet` / `-q` silent mode returning deterministic exit codes (`0` = valid, `1` = invalid, `2` = usage/runtime error).
   - TTY auto-detection and standard `NO_COLOR` environment variable support.
 - 📦 **Embedded & Cached Schema Lifecycle**:
-  - Embedded v1.0.0 default schema fallback (`plugin.schema.json`).
-  - `apv schema update [url]` to fetch and cache updated schemas locally (`~/.apv/schemas/`).
+  - Embedded canonical v1.0.0 schemas (`plugin.schema.json` and `mcp.schema.json`).
+  - `apv schema update [manifest|mcp] [url]` to fetch and cache updated schemas locally (`~/.apv/schemas/`).
   - `--schema <path|url>` for one-off custom schema validation.
 - 🚀 **Shell Autocompletion**: Built-in tab completion for Bash, Zsh, Fish, and PowerShell (`apv completion <shell>`) with `.json` file completion for `validate` and `--schema`.
 - ⚠️ **Spec-Compliant Warning Handling**:
-  - Unrecognized top-level fields are classified as **Warnings** (`⚠`) and ignored per Spec §5.2 without failing validation.
+  - Unrecognized top-level fields in `plugin.json` are classified as **Warnings** (`⚠`) and ignored per Spec §5.2 without failing validation.
 
 ---
 
